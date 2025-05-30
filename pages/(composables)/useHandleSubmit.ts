@@ -1,5 +1,5 @@
 import { ref, watch } from 'vue'
-import type { IProductSchema } from '../(models)/IProductInfo'
+import type { IProductSchema } from '../../src/models/IProductInfo'
 
 type MessageHeadType = {
     method: string
