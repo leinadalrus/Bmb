@@ -1,18 +1,18 @@
 import { onMounted, ref, watch } from 'vue'
-import type { IProductSchema } from '../../src/models/IProductInfo'
+import type { IProductInfo } from '../../src/models/IProductInfo'
 
-interface IJsonDatum {
+type JsonHeadType = {
     key: string
     value: string
 }
 
-const beywatches = ref<IProductSchema[]>([])
-const BEYDEX_KEYNAME = 'beigomas'
+const gearwatchers = ref<IProductInfo[]>([])
+const GEARFLAT_KEYNAME = 'gearflats'
 
 async function cacheTradeItems() {
     return {
-        key: BEYDEX_KEYNAME,
-        value: JSON.stringify(beywatches.value)
+        key: GEARFLAT_KEYNAME,
+        value: JSON.stringify(gearwatchers.value)
     }
 }
 
@@ -29,7 +29,7 @@ const convertBlobToBase64 = (blob: Blob) => {
     })
 }
 
-const loadSavedAsync = async (dataHeader: IJsonDatum) => {
+const loadSavedAsync = async (dataHeader: JsonHeadType) => {
     const tradingList = await cacheTradeItems()
     const tradesInPreferences = tradingList.value
         ? JSON.parse(tradingList.value)
@@ -46,18 +46,18 @@ const loadSavedAsync = async (dataHeader: IJsonDatum) => {
 }
 
 export const saveTradeAsync = async (
-    trade: IProductSchema,
-    filenamePath: string 
+    trade: IProductInfo,
+    filenamePath: string
 ) => {
     const response = await fetch(trade.webviewPath!)
     const blob = await response.blob()
-    const beyData = convertBlobToBase64(blob)
+    const gearData = convertBlobToBase64(blob)
 
     return {
         id: 0,
         name: trade.name,
         description: trade.description,
-        data: beyData,
+        data: gearData,
         filenamePath: filenamePath,
         webviewPath: trade.webviewPath
     }
@@ -74,4 +74,4 @@ export const useStoreGallery = () => {
     return save
 }
 
-watch(beywatches, cacheTradeItems)
+watch(gearwatchers, cacheTradeItems)

@@ -18,3 +18,15 @@ import AsideBar from './(components)/AsideBar.vue'
         <AsideBar />
     </div>
 </template>
+
+<style module="scoped" lang="scss">
+content {
+    margin-top: 1.2rem;
+    padding: 0.5rem 0.8rem;
+}
+
+container-fluid {
+    margin: 0.1rem;
+    padding: 0.2rem;
+}
+</style>

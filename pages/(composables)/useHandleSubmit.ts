@@ -1,5 +1,5 @@
 import { ref, watch } from 'vue'
-import type { IProductSchema } from '../../src/models/IProductInfo'
+import type { IProductInfo } from '../../src/models/IProductInfo'
 
 type MessageHeadType = {
     method: string
@@ -33,18 +33,18 @@ const convertBlobToBase64 = (blob: Blob) => {
 }
 
 export const handleSubmitAsync = async (
-    trade: IProductSchema,
+    trade: IProductInfo,
     filenamePath: string
 ) => {
     const response = await fetch(trade.webviewPath!)
     const blob = await response.blob()
-    const beyData = convertBlobToBase64(blob)
+    const gearData = convertBlobToBase64(blob)
 
     return {
         id: 0,
         name: trade.name,
         description: trade.description,
-        data: beyData,
+        data: gearData,
         filenamePath: filenamePath,
         webviewPath: trade.webviewPath
     }

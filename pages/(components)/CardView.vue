@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import TradingCard from './TradingCard.vue'
+
+const tags = ref<String[]>([''])
 </script>
 
 <template>
@@ -19,7 +21,7 @@ import TradingCard from './TradingCard.vue'
                     'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.'
                 "
             image=""
-            tags=""
+            v-bind:tags="tags"
         />
     </section>
 </template>

@@ -1,4 +1,15 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const isTabActive = ref(false)
+const setTabAsActive = ref(false)
+
+function handleOnMouseClick() {
+    setTabAsActive.value = true
+}
+
+function handleOnChange() {
+    isTabActive.value = false
+}
+</script>
 
 <template>
     <nav class="fixed flex flex-wrap px-1 mx-1">
@@ -6,7 +17,8 @@
             <div class="relative h-16 items-center justify-between">
                 <button
                     class="rounded-t rounded-sm px-4"
-                    v-on:click="() => setActiveTab('yours')"
+                    v-on:click="handleOnMouseClick()"
+                    v-on:change="handleOnChange()"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -25,7 +37,8 @@
 
                 <button
                     class="rounded-t rounded-sm px-4"
-                    v-on:click="() => setActiveTab('elses')"
+                    v-on:click="handleOnMouseClick()"
+                    v-on:change="handleOnChange()"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -43,7 +56,8 @@
 
                 <button
                     class="rounded-t rounded-sm px-4"
-                    v-on:click="() => setActiveTab('miscs')"
+                    v-on:click="() => handleOnMouseClick()"
+                    v-on:change="handleOnChange()"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -81,10 +95,5 @@ button {
         margin: 0.5rem 1rem;
         color: #ebb583;
     }
-}
-
-content {
-    margintop: 1.2rem;
-    padding: 0.5rem 0.8rem;
 }
 </style>

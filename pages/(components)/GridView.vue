@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import AlbumArt from './AlbumArt.vue'
 
-const tags = ref([''])
+const tags = ref<String[]>([''])
 </script>
 
 <template>

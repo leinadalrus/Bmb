@@ -1,6 +1,6 @@
 import type { IProductCharacter } from './IProductCharacter'
 
-export interface IProductSchema {
+export interface IProductInfo {
     id: number
     name: string
     data: IProductCharacter
