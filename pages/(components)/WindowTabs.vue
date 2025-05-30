@@ -1,4 +1,4 @@
-<script setup></script>
+<script setup lang="ts"></script>
 
 <template>
     <nav class="fixed flex flex-wrap px-1 mx-1">
