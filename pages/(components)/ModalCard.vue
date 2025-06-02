@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import TradingCard from './TradingCard.vue'
 
+const tags = ref<String[]>([''])
+
 const isModalActive = ref(false)
 const setModalAsActive = ref(false)
 
@@ -34,7 +36,7 @@ function handleFocusLoss() {
             image="image"
             author=""
             group=""
-            tags=""
+            v-bind:tags="tags"
         />
     </div>
 </template>

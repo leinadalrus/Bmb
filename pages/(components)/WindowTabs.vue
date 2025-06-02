@@ -75,7 +75,7 @@ function handleOnChange() {
     </nav>
 </template>
 
-<style module="scoped" lang="scss">
+<style scoped lang="scss">
 nav {
     padding: 0.4rem;
     bottom: 0;

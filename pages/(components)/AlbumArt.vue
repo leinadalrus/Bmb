@@ -4,6 +4,13 @@ defineProps({
     image: String,
     tags: Array<String>
 })
+
+export type AlbumArtType = {
+    id: number
+    title: string
+    image: string
+    tags: Array<string>
+}
 </script>
 
 <template>

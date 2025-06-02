@@ -8,6 +8,17 @@ defineProps({
     image: String,
     tags: Array<String>
 })
+
+export type TradingCardType = {
+    id: number
+    title: string
+    author: string
+    group: string
+    content: string
+    flavour: string
+    image: string
+    tags: Array<string>
+}
 </script>
 
 <template>
