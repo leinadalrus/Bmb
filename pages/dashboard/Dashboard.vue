@@ -11,9 +11,9 @@ interface IActivityView {
     logline: string
 }
 
-const activity = ref<IActivityView[]>([{ id: 0, timeof: '', logline: '' }])
-const albums = ref<AlbumArtType[]>()
-const cards = ref<TradingCardType[]>()
+const activity = shallowRef<IActivityView[]>([])
+const albums = shallowRef<AlbumArtType[]>()
+const cards = shallowRef<TradingCardType[]>()
 </script>
 
 <template>
