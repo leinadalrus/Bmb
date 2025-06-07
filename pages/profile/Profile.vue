@@ -10,6 +10,8 @@ interface IProfileInfo {
     title: string
     description: string
 }
+
+const profile = ref<IProfileInfo>()
 </script>
 
 <template>
@@ -17,9 +19,13 @@ interface IProfileInfo {
 
     <section>
         <div>
-            <AlbumArt />
+            <AlbumArt :title="profile?.title" :image="profile?.image" />
         </div>
 
-        <TradingCard />
+        <TradingCard
+            :author="profile?.username"
+            :content="profile?.description"
+            :image="profile?.image"
+        />
     </section>
 </template>

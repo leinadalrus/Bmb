@@ -17,8 +17,8 @@ const form = ref<IRegisterForm>({
 const confirmPassword = ref('')
 const erroneous = ref('')
 
+const statusCode = ref(0)
 const isLoading = ref(false)
-const isSuccess = ref(false)
 
 const email = async (request: Request, response: Response) => {
     const body = request.body
@@ -27,9 +27,9 @@ const email = async (request: Request, response: Response) => {
         body
     })
 
-    if (user) return { status: 409 }
+    if (user) return { statusCode: 409, JSON: erroneous }
 
-    return { status: 200 }
+    return { statusCode: 200, JSON: body }
 }
 
 const onSubmit = async (request: Request, response: Response) => {
@@ -43,7 +43,7 @@ const onSubmit = async (request: Request, response: Response) => {
         const user = await UserModelAssembler.findOne({
             data
         })
-        if (user) return { status: 400 }
+        if (user) return { statusCode: 400, JSON: erroneous }
 
         const hashed = await bcrypt.hash(
             form.value.password,
@@ -56,10 +56,10 @@ const onSubmit = async (request: Request, response: Response) => {
         })
         await (await register).save()
 
-        return { status: 201 }
+        return { statusCode: 201, JSON: data }
     } catch (err) {
         console.table(err)
-        return { status: 500 }
+        return { status: 500, JSON: erroneous }
     }
 }
 

@@ -13,7 +13,9 @@ const form = ref<ILoginForm>({
     password: ''
 })
 
-const error = ref('')
+const isSuccess = ref(false)
+const statusCode = ref(0)
+const erroneous = ref('')
 
 async function login(email: string, password: string) {
     return new Promise<{ isSuccess: boolean; message?: string }>((resolve) => {
@@ -29,15 +31,16 @@ async function login(email: string, password: string) {
 }
 
 async function onSubmit() {
-    error.value = ''
+    erroneous.value = ''
 
     const { email, password } = form.value
     const result = await login(email, password)
 
     if (!result.isSuccess) {
-        error.value = result.message || 'Error: login failed...'
+        erroneous.value = result.message || 'Error: login failed...'
     }
 }
+
 // JWT-based login authentication
 const email = async (request: Request, response: Response) => {
     const data = request.body
@@ -46,9 +49,9 @@ const email = async (request: Request, response: Response) => {
         data
     })
 
-    if (!user) return { status: 409 }
+    if (!user) return { statusCode: 409, JSON: erroneous }
 
-    return { status: 202, form: form }
+    return { statusCode: 202, form: form }
 }
 
 const password = async (request: Request, response: Response) => {
@@ -58,7 +61,7 @@ const password = async (request: Request, response: Response) => {
         data
     })
 
-    if (!user) return { status: 401 }
+    if (!user) return { statusCode: 401, JSON: erroneous }
 
     if (
         (await bcrypt.compare(
@@ -66,9 +69,9 @@ const password = async (request: Request, response: Response) => {
             process.env['SECRET_HASH']
         )) == true
     )
-        if (!user) return { status: 401 }
+        if (!user) return { statusCode: 401, JSON: erroneous }
 
-    return { status: 202, form }
+    return { statusCode: 202, JSON: form }
 }
 
 const authenticate = async (request: Request, response: Response) => {
@@ -87,12 +90,12 @@ const authenticate = async (request: Request, response: Response) => {
         const user = await UserModelAssembler.findOne({
             data
         })
-        if (!user) return { status: 401 }
+        if (!user) return { statusCode: 401, JSON: erroneous }
 
         await bcrypt.compare(user.username, form.value.email)
         await bcrypt.compare(user.password, form.value.password)
 
-        const tokenized = jsonwebtoken.sign(
+        const tokenised = jsonwebtoken.sign(
             {
                 email: user.email,
                 password: user.password
@@ -101,10 +104,10 @@ const authenticate = async (request: Request, response: Response) => {
             process.env['SECRET_KEY']
         )
 
-        return { status: 200, tokenized: tokenized }
+        return { statusCode: 200, JSON: tokenised }
     } catch (err) {
         console.table(err)
-        return { status: 500 }
+        return { statusCode: 500, JSON: erroneous }
     }
 }
 
