@@ -75,9 +75,18 @@ const password = async (request: Request, response: Response) => {
 }
 
 const authenticate = async (request: Request, response: Response) => {
+    const headers = new Headers()
+
+    // NOTE(Authorisation): request.header('Authorization').replace('Bearer', '')
+    headers.set('Content-Type', 'application/json')
+    headers.set('Accept', 'application/json')
+
+    const requestInfo = new Request(request.url, {
+        method: request.method,
+        headers: headers
+    })
+
     try {
-        // request.header('Authorization').replace('Bearer', '')
-        const headers = request.headers
         const data = request.formData
 
         for (let key in headers.keys) {
@@ -104,7 +113,13 @@ const authenticate = async (request: Request, response: Response) => {
             process.env['SECRET_KEY']
         )
 
-        return { statusCode: 200, JSON: tokenised }
+        return fetch(requestInfo)
+            .then((d) => d.json())
+            .then((d) => {
+                statusCode.value = 200
+                // We return as an interfaced-array type-
+                return d as ILoginForm[] // -because of our JSON output value
+            })
     } catch (err) {
         console.table(err)
         return { statusCode: 500, JSON: erroneous }

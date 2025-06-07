@@ -33,7 +33,20 @@ const email = async (request: Request, response: Response) => {
 }
 
 const onSubmit = async (request: Request, response: Response) => {
+    const headers = new Headers()
+
+    // NOTE(Authorisation): request.header('Authorization').replace('Bearer', '')
+    headers.set('Content-Type', 'application/json')
+    headers.set('Accept', 'application/json')
+
+    const requestInfo = new Request(request.url, {
+        method: request.method,
+        headers: headers
+    })
+
+    // For values that are not-truly-constant-
     try {
+        // -we want to have them be invoked when in our try-catch statement
         if (form.value.password !== confirmPassword.value) {
             return { status: 401 }
         }
@@ -56,10 +69,16 @@ const onSubmit = async (request: Request, response: Response) => {
         })
         await (await register).save()
 
-        return { statusCode: 201, JSON: data }
+        return fetch(requestInfo)
+            .then((d) => d.json())
+            .then((d) => {
+                statusCode.value = 201
+                // We return as an interfaced-array type-
+                return d as IRegisterForm[] // -because of our JSON output value
+            })
     } catch (err) {
         console.table(err)
-        return { status: 500, JSON: erroneous }
+        return { statusCode: 500, JSON: erroneous }
     }
 }
 
