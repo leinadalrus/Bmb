@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import CardView from './CardView.vue'
 import Poster from './Poster.vue';
 import SearchField from './SearchField.vue'
 </script>

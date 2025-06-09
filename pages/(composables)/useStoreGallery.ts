@@ -1,12 +1,12 @@
 import { onMounted, ref, watch } from 'vue'
-import type { IProductInfo } from '../../src/models/IProductInfo'
+import type { ProductCardMutationType } from '../(components)/ProductCard.vue'
 
 type JsonHeadType = {
     key: string
     value: string
 }
 
-const gearwatchers = ref<IProductInfo[]>([])
+const gearwatchers = ref<ProductCardMutationType[]>([])
 const GEARFLAT_KEYNAME = 'gearflats'
 
 async function cacheTradeItems() {
@@ -46,7 +46,7 @@ const loadSavedAsync = async (dataHeader: JsonHeadType) => {
 }
 
 export const saveTradeAsync = async (
-    trade: IProductInfo,
+    trade: ProductCardMutationType,
     filenamePath: string
 ) => {
     const response = await fetch(trade.webviewPath!)

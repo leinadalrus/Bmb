@@ -3,10 +3,11 @@ defineProps({
     icon: {
         type: String,
         required: true
-    }
+    },
+    alt: { type: String }
 })
 </script>
 
 <template>
-    <img v-bind:src="icon" alt="" />
+    <img :src="icon" :alt="alt" />
 </template>

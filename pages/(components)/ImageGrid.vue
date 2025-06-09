@@ -2,9 +2,9 @@
 import { ref } from 'vue'
 import { useStoreGallery } from '../(composables)/useStoreGallery'
 import TradingCard from './TradingCard.vue'
-import type { IProductInfo } from '~/src/models/IProductInfo'
+import type { ProductCardMutationType } from './ProductCard.vue'
 
-const gearwatchers = ref<IProductInfo[]>([])
+const gearwatchers = ref<ProductCardMutationType[]>([])
 </script>
 
 <template>

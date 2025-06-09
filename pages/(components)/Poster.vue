@@ -6,6 +6,18 @@ defineProps({
     flavour: String,
     logline: String
 })
+
+type PosterType = {
+    height: number
+    width: number
+    title: string
+    flavour: string
+    logline: string
+}
+
+type PosterMutationType = PosterType & {
+    id: number
+}
 </script>
 
 <template>

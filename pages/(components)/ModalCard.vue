@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import TradingCard from './TradingCard.vue'
+import TradingCard, { type TradingCardType } from './TradingCard.vue'
 
-const tags = ref<String[]>([''])
+const cards = ref<TradingCardType[]>()
 
 const isModalActive = ref(false)
 const setModalAsActive = ref(false)
@@ -28,15 +28,16 @@ function handleFocusLoss() {
         v-on:blur="handleFocusLoss()"
         v-on:mouseover="handleMouseOver()"
         v-on:mouseout="handleMouseOut()"
+        v-for="i in cards"
     >
         <TradingCard
-            title="title"
-            content="content"
-            flavour="flavour"
-            image="image"
-            author=""
-            group=""
-            v-bind:tags="tags"
+            :title="i.title"
+            :content="i.content"
+            :flavour="i.flavour"
+            :image="i.image"
+            :author="i.author"
+            :group="i.group"
+            :tags="i.tags"
         />
     </div>
 </template>

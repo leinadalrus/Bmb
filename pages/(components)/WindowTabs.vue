@@ -17,8 +17,8 @@ function handleOnChange() {
             <div class="relative h-16 items-center justify-between">
                 <button
                     class="rounded-t rounded-sm px-4"
-                    v-on:click="handleOnMouseClick()"
-                    v-on:change="handleOnChange()"
+                    @click="handleOnMouseClick()"
+                    @change="handleOnChange()"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -37,8 +37,8 @@ function handleOnChange() {
 
                 <button
                     class="rounded-t rounded-sm px-4"
-                    v-on:click="handleOnMouseClick()"
-                    v-on:change="handleOnChange()"
+                    @click="handleOnMouseClick()"
+                    @change="handleOnChange()"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -56,8 +56,8 @@ function handleOnChange() {
 
                 <button
                     class="rounded-t rounded-sm px-4"
-                    v-on:click="() => handleOnMouseClick()"
-                    v-on:change="handleOnChange()"
+                    @click="() => handleOnMouseClick()"
+                    @change="handleOnChange()"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
