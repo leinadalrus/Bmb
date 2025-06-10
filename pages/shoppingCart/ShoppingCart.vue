@@ -1,15 +1,26 @@
 <script setup lang="ts">
+import type { ProductCardMutationType } from '../(components)/ProductCard.vue'
 import PaymentModal from '../payments/PaymentModal.vue'
 
-interface IShoppingCart {
+defineProps<{
+    shoppingCartList: ProductCardMutationType[]
+}>()
+
+defineEmits<{
+    (e: 'removeFromShoppingCart', product: ProductCardMutationType): void
+}>()
+
+type ShoppingCartType = {
     id: number
     name: string
     price: number
     quantity: number
+    paraphernalia: ProductCardMutationType[]
 }
 
-const cart = ref<IShoppingCart[]>([])
+const cart = ref<ShoppingCartType[]>([])
 const isPaymentModalActive = ref(false)
+
 const total = computed(() => {
     return cart.value.reduce(
         (sumTotal, product) => sumTotal + product.price * product.quantity,
@@ -19,10 +30,6 @@ const total = computed(() => {
 
 function removeFromShoppingCart(id: number) {
     cart.value = cart.value.filter((i) => i.id != id)
-}
-
-function updateShoppingCart(shoppingCart: IShoppingCart) {
-    if (shoppingCart.quantity < 1) removeFromShoppingCart(shoppingCart.id)
 }
 
 function handlePaymentSuccess() {
@@ -42,7 +49,7 @@ function handlePaymentSuccess() {
         </thead>
 
         <tbody>
-            <tr v-for="item in cart" v-bind:key="item.id">
+            <tr v-for="item in shoppingCartList" v-bind:key="item.id">
                 <td>{{ item.name }}</td>
                 <td>
                     <input
@@ -52,12 +59,18 @@ function handlePaymentSuccess() {
                         v-model.number="item.quantity"
                         min="1"
                         max="1"
-                        v-on:change="updateShoppingCart(item)"
                     />
                 </td>
                 <td>{{ item.price.toFixed(2) }}</td>
                 <td>
-                    <button v-on:click="removeFromShoppingCart(item.id)">
+                    <button
+                        @click="
+                            () => {
+                                removeFromShoppingCart(item.id)
+                                $emit('removeFromShoppingCart', item)
+                            }
+                        "
+                    >
                         Remove from shopping cart
                     </button>
                 </td>
