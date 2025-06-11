@@ -8,6 +8,7 @@ declare global {
             SALT_ROUNDS: number
             SECRET_KEY: string
             SECRET_HASH: string
+            SRV_PORT: number
         }
     }
 }

@@ -4,9 +4,14 @@ defineProps<{
 }>()
 
 defineEmits<{
-    (e: 'addToShoppingCart', product: ProductCardMutationType): void
-    (e: 'removeFromShoppingCart', product: ProductCardMutationType): void
-}>()
+    (e: 'addProductToShoppingCart', product: ProductCardMutationType): void
+    (e: 'removeProductFromShoppingCart', product: ProductCardMutationType): void
+}>() // Implicitly calls function
+
+const emit = defineEmits([
+    'addProductToShoppingCart',
+    'removeProductFromShoppingCart'
+]) // Arbitrarily calls function
 
 export type ProductCardType = {
     name: string
@@ -27,19 +32,30 @@ export type ProductCardMutationType = ProductCardType & {
     webviewPath: string
 }
 
-const shoppingCartList = ref<ProductCardMutationType[]>()
+const shoppingCartList = ref<ProductCardMutationType[]>([])
 const inShoppingCartAlready = ref(false)
 
-function addProductToCart(product: ProductCardMutationType) {
+export function addProductToShoppingCart(product: ProductCardMutationType) {
+    const productAlreadyIn = shoppingCartList.value?.find(
+        (item) => item.id == product.id
+    )
+    if (productAlreadyIn) {
+        return shoppingCartList.value?.map((item) => {
+            item.id == product.id ? { ...item } : item
+        })
+    }
+
     shoppingCartList.value?.push(product)
+    emit('addProductToShoppingCart')
+
+    return { ...shoppingCartList }
 }
 
-function removeProductFromCart(product: ProductCardMutationType) {
-    shoppingCartList.value
-        ?.map((p) => {
-            if (p.id == product.id) return p
-        })
-        .pop()
+export function removeProductFromShoppingCart(
+    product: ProductCardMutationType
+) {
+    shoppingCartList.value.filter((i) => i.id != product.id).pop()
+    emit('removeProductFromShoppingCart')
 }
 </script>
 
@@ -86,13 +102,13 @@ function removeProductFromCart(product: ProductCardMutationType) {
         <div v-if="inShoppingCartAlready == true">
             <button
                 class="px-6 py-4"
-                @click="$emit('removeFromShoppingCart', product)"
+                @click="removeProductFromShoppingCart(product)"
             >
                 Remove from cart? &ominus;
             </button>
         </div>
 
-        <button class="px-6 py-4" @click="$emit('addToShoppingCart', product)">
+        <button class="px-6 py-4" @click="addProductToShoppingCart(product)">
             Add to cart? &oplus;
         </button>
     </article>

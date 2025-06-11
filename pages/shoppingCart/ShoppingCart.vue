@@ -1,5 +1,8 @@
 <script setup lang="ts">
-import type { ProductCardMutationType } from '../(components)/ProductCard.vue'
+import {
+    type ProductCardMutationType,
+    removeProductFromShoppingCart
+} from '../(components)/ProductCard.vue'
 import PaymentModal from '../payments/PaymentModal.vue'
 
 defineProps<{
@@ -7,8 +10,14 @@ defineProps<{
 }>()
 
 defineEmits<{
-    (e: 'removeFromShoppingCart', product: ProductCardMutationType): void
-}>()
+    (e: 'undoChangeToShoppingCart', product: ProductCardMutationType): void
+    (e: 'removeProductFromShoppingCart', product: ProductCardMutationType): void
+}>() // Implicitly calls function
+
+const emit = defineEmits([
+    'undoChangeToShoppingCart',
+    'removeProductFromShoppingCart'
+]) // Arbitrarily calls function
 
 type ShoppingCartType = {
     id: number
@@ -28,10 +37,6 @@ const total = computed(() => {
     )
 })
 
-function removeFromShoppingCart(id: number) {
-    cart.value = cart.value.filter((i) => i.id != id)
-}
-
 function handlePaymentSuccess() {
     // TODO: Stripe/PayPal API checkout-payment throughput processing here
 }
@@ -49,25 +54,25 @@ function handlePaymentSuccess() {
         </thead>
 
         <tbody>
-            <tr v-for="item in shoppingCartList" v-bind:key="item.id">
-                <td>{{ item.name }}</td>
+            <tr v-for="product in shoppingCartList" v-bind:key="product.id">
+                <td>{{ product.name }}</td>
                 <td>
                     <input
                         type="number"
                         name=""
                         id=""
-                        v-model.number="item.quantity"
+                        v-model.number="product.quantity"
                         min="1"
                         max="1"
                     />
                 </td>
-                <td>{{ item.price.toFixed(2) }}</td>
+                <td>{{ product.price.toFixed(2) }}</td>
                 <td>
                     <button
                         @click="
                             () => {
-                                removeFromShoppingCart(item.id)
-                                $emit('removeFromShoppingCart', item)
+                                removeProductFromShoppingCart(product)
+                                $emit('removeProductFromShoppingCart', product)
                             }
                         "
                     >

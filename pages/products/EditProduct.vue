@@ -23,6 +23,34 @@ const emits = defineEmits(['saveProduct', 'discardProduct'])
         <label for="">Quantity</label>
         <input type="number" name="quantity" id="" />
 
+        <label for="">Tags</label>
+        <option value="tags">
+            <select name="game" id="">
+                Games
+            </select>
+            <select name="comic" id="">
+                Comics
+            </select>
+            <select name="illustration" id="">
+                Illustrations
+            </select>
+            <select name="accessory" id="">
+                Accessories
+            </select>
+            <select name="video" id="">
+                Videos
+            </select>
+            <select name="voice" id="">
+                Voice
+            </select>
+            <select name="music" id="">
+                Music
+            </select>
+            <select name="tool" id="">
+                Tools
+            </select>
+        </option>
+
         <button type="submit">Save</button>
 
         <button type="button" @onclick=";-1">Discard</button>
