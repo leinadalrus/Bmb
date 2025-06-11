@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { AlbumArtType } from '../(components)/AlbumArt.vue'
+import type { AlbumArtMutationType } from '../(components)/AlbumArt.vue'
 import AlbumArt from '../(components)/AlbumArt.vue'
 import TradingCard, {
-    type TradingCardType
+    type TradingCardMutationType
 } from '../(components)/TradingCard.vue'
 
 interface IActivityView {
@@ -12,34 +12,18 @@ interface IActivityView {
 }
 
 const activity = shallowRef<IActivityView[]>([])
-const albums = shallowRef<AlbumArtType[]>()
-const cards = shallowRef<TradingCardType[]>()
+const albums = shallowRef<AlbumArtMutationType[]>([])
+const cards = shallowRef<TradingCardMutationType[]>([])
 </script>
 
 <template>
     <main>
         <section>
-            <span v-for="i in cards" v-bind:key="i.id">
-                <TradingCard
-                    v-bind:title="i.title"
-                    v-bind:author="i.author"
-                    v-bind:content="i.content"
-                    v-bind:flavour="i.flavour"
-                    v-bind:group="i.group"
-                    v-bind:image="i.image"
-                    v-bind:tags="i.tags"
-                />
-            </span>
+            <TradingCard :trading-cards="cards" />
         </section>
 
         <section>
-            <li v-for="i in albums" v-bind:key="i.id">
-                <AlbumArt
-                    v-bind:image="i.image"
-                    v-bind:title="i.title"
-                    v-bind:tags="i.tags"
-                />
-            </li>
+            <AlbumArt :album-arts="albums" />
         </section>
 
         <section>

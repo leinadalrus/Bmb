@@ -1,6 +1,10 @@
 <script setup lang="ts">
-import AlbumArt from '../(components)/AlbumArt.vue'
-import TradingCard from '../(components)/TradingCard.vue'
+import AlbumArt, {
+    type AlbumArtMutationType
+} from '../(components)/AlbumArt.vue'
+import TradingCard, {
+    type TradingCardMutationType
+} from '../(components)/TradingCard.vue'
 import Dashboard from '../dashboard/Dashboard.vue'
 
 interface IProfileInfo {
@@ -12,6 +16,8 @@ interface IProfileInfo {
 }
 
 const profile = ref<IProfileInfo>()
+const albums = shallowRef<AlbumArtMutationType[]>([])
+const cards = shallowRef<TradingCardMutationType[]>([])
 </script>
 
 <template>
@@ -19,13 +25,9 @@ const profile = ref<IProfileInfo>()
 
     <section>
         <div>
-            <AlbumArt :title="profile?.title" :image="profile?.image" />
+            <AlbumArt :album-arts="albums" />
         </div>
 
-        <TradingCard
-            :author="profile?.username"
-            :content="profile?.description"
-            :image="profile?.image"
-        />
+        <TradingCard :trading-cards="cards" />
     </section>
 </template>

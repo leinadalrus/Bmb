@@ -83,8 +83,8 @@ function handlePaymentSuccess() {
 
     <PaymentModal
         v-if="isPaymentModalActive == true"
-        v-bind:quantity="total"
-        v-on:close="isPaymentModalActive = false"
-        v-on:succession="handlePaymentSuccess()"
+        :quantity="total"
+        :close="(isPaymentModalActive = false)"
+        :succession="handlePaymentSuccess()"
     />
 </template>

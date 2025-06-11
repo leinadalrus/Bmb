@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import AlbumArt, { type AlbumArtType } from './AlbumArt.vue'
+import AlbumArt, { type AlbumArtMutationType } from './AlbumArt.vue'
 
-const albums = ref<AlbumArtType[]>()
+const albums = ref<AlbumArtMutationType[]>([])
 </script>
 
 <template>
     <section
         class="grid grid-cols-3 grid-rows-[repeat(auto-fit,_minmax(12.5rem,_1fr))] gap-4"
-        v-for="i in albums"
+        v-for="album in albums"
     >
-        <AlbumArt :title="i?.title" :image="i?.image" v-bind:tags="i.tags" />
+        <AlbumArt :album-arts="albums" />
     </section>
 </template>
