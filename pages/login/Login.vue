@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import bcrypt from 'bcryptjs'
 import jsonwebtoken from 'jsonwebtoken'
-import { UserModelAssembler } from '~/src/models/UserSchema'
+import { UserModelAssembler } from '~/server/models/UserSchema'
 
 interface ILoginForm {
     email: string

@@ -1,7 +1,9 @@
 <script setup lang="ts">
-defineProps({
-    quantity: Number
-})
+defineProps<{ verifiableCards: VerificationCardType[] }>()
+defineEmits<{
+    (e: 'paymentProcessing', verifiableCard: VerificationCardType): void
+    (e: 'paymentSuccession', verifiableCard: VerificationCardType): void
+}>()
 
 const emit = defineEmits(['deactivate', 'succession'])
 

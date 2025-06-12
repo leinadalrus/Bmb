@@ -1,10 +1,12 @@
 import { setup, createPage } from '@nuxt/test-utils/e2e'
+import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 import {
     addProductToShoppingCart,
     removeProductFromShoppingCart,
     type ProductCardMutationType
 } from '~/pages/(components)/ProductCard.vue'
+import ShoppingCart from '~/pages/shoppingCart/ShoppingCart.vue'
 
 const testProductA: ProductCardMutationType = {
     id: 0,
@@ -63,6 +65,19 @@ describe('Shopping Cart', async () => {
 
                 expect(updated).toHaveLength(1)
                 expect(updated).toMatchObject({ ...shoppingCart })
+
+                done()
+            })
+        })
+
+        it('Using Vue $defineEmits prop-lambda "removeProductFromShoppingCart"', async () => {
+            new Promise<void>(async (done) => {
+                const wrapper = mount(ShoppingCart)
+                await wrapper.find('button').trigger('click')
+
+                expect(
+                    wrapper.emitted('removeProductFromShoppingCart')
+                ).toBeTruthy()
 
                 done()
             })

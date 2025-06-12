@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { UserModelAssembler } from '~/src/models/UserSchema'
+import { UserModelAssembler } from '~/server/models/UserSchema'
 
 import bcrypt from 'bcryptjs'
 
