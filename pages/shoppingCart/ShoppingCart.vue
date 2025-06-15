@@ -1,9 +1,6 @@
 <script setup lang="ts">
-import {
-    type ProductCardMutationType,
-    removeProductFromShoppingCart
-} from '../(components)/ProductCard.vue'
-import PaymentModal from '../payments/PaymentModal.vue'
+import { ref, computed } from 'vue'
+import { type ProductCardMutationType } from '../(components)/ProductCard.vue'
 
 defineProps<{
     shoppingCartList: ProductCardMutationType[]
@@ -13,11 +10,6 @@ defineEmits<{
     (e: 'undoChangeToShoppingCart', product: ProductCardMutationType): void
     (e: 'removeProductFromShoppingCart', product: ProductCardMutationType): void
 }>() // Implicitly calls function
-
-const emit = defineEmits([
-    'undoChangeToShoppingCart',
-    'removeProductFromShoppingCart'
-]) // Arbitrarily calls function
 
 type ShoppingCartType = {
     id: number
@@ -36,10 +28,6 @@ const total = computed(() => {
         0
     )
 })
-
-function handlePaymentSuccess() {
-    // TODO: Stripe/PayPal API checkout-payment throughput processing here
-}
 </script>
 
 <template>
@@ -71,7 +59,6 @@ function handlePaymentSuccess() {
                     <button
                         @click="
                             () => {
-                                removeProductFromShoppingCart(product)
                                 $emit('removeProductFromShoppingCart', product)
                             }
                         "
@@ -85,11 +72,4 @@ function handlePaymentSuccess() {
 
     <span>{{ total }}</span>
     <button v-on:click="isPaymentModalActive = true">to Checkout?</button>
-
-    <PaymentModal
-        v-if="isPaymentModalActive == true"
-        :quantity="total"
-        :close="(isPaymentModalActive = false)"
-        :succession="handlePaymentSuccess()"
-    />
 </template>

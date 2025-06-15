@@ -4,7 +4,7 @@ import TradingCard, { type TradingCardMutationType } from './TradingCard.vue'
 
 const cards = ref<TradingCardMutationType[]>([])
 
-const isModalActive = ref(false)
+// const isModalActive = ref(false)
 const setModalAsActive = ref(false)
 
 function handleMouseOver() {

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import bcrypt from 'bcryptjs'
 import jsonwebtoken from 'jsonwebtoken'
 import { UserModelAssembler } from '~/server/models/UserSchema'
@@ -13,48 +14,24 @@ const form = ref<ILoginForm>({
     password: ''
 })
 
-const isSuccess = ref(false)
 const statusCode = ref(0)
 const erroneous = ref('')
 
-async function login(email: string, password: string) {
-    return new Promise<{ isSuccess: boolean; message?: string }>((resolve) => {
-        // NOTE(Daniel): make sure to call the MongoDB/Mongoose API here for use
-        setTimeout(() => {
-            if (!email && !password) {
-                resolve({ isSuccess: false })
-            }
-
-            resolve({ isSuccess: true })
-        }, 1800)
-    })
-}
-
-async function onSubmit() {
-    erroneous.value = ''
-
-    const { email, password } = form.value
-    const result = await login(email, password)
-
-    if (!result.isSuccess) {
-        erroneous.value = result.message || 'Error: login failed...'
-    }
-}
-
 // JWT-based login authentication
-const email = async (request: Request, response: Response) => {
+const email = async (request: Request) => {
     const data = request.body
 
     const user = await UserModelAssembler.findOne({
         data
     })
 
+    if (!findEmail) return { statusCode: 409, JSON: erroneous }
     if (!user) return { statusCode: 409, JSON: erroneous }
 
-    return { statusCode: 202, form: form }
+    return { statusCode: 202, JSON: form }
 }
 
-const password = async (request: Request, response: Response) => {
+const password = async (request: Request) => {
     const data = request.body
 
     const user = await UserModelAssembler.findOne({
@@ -63,18 +40,10 @@ const password = async (request: Request, response: Response) => {
 
     if (!user) return { statusCode: 401, JSON: erroneous }
 
-    if (
-        (await bcrypt.compare(
-            form.value.password,
-            process.env['SECRET_HASH']
-        )) == true
-    )
-        if (!user) return { statusCode: 401, JSON: erroneous }
-
     return { statusCode: 202, JSON: form }
 }
 
-const authenticate = async (request: Request, response: Response) => {
+const authenticate = async (request: Request) => {
     const headers = new Headers()
 
     // NOTE(Authorisation): request.header('Authorization').replace('Bearer', '')
@@ -89,13 +58,6 @@ const authenticate = async (request: Request, response: Response) => {
     try {
         const data = request.formData
 
-        for (let key in headers.keys) {
-            if (key == 'Authorization') headers.set('Authorization', 'Bearer')
-        }
-        const hs = String(headers.get('Authorization'))
-
-        const bearers = jsonwebtoken.verify(hs, process.env['SECRET_KEY'])
-
         const user = await UserModelAssembler.findOne({
             data
         })
@@ -104,19 +66,18 @@ const authenticate = async (request: Request, response: Response) => {
         await bcrypt.compare(user.username, form.value.email)
         await bcrypt.compare(user.password, form.value.password)
 
-        const tokenised = jsonwebtoken.sign(
-            {
-                email: user.email,
-                password: user.password
-            },
-            // eslint-disable-next-line no-undef
-            process.env['SECRET_KEY']
-        )
-
         return fetch(requestInfo)
             .then((d) => d.json())
             .then((d) => {
                 statusCode.value = 200
+                jsonwebtoken.sign(
+                    {
+                        email,
+                        password
+                    },
+                    // eslint-disable-next-line no-undef
+                    process.env['SECRET_KEY']
+                )
                 // We return as an interfaced-array type-
                 return d as ILoginForm[] // -because of our JSON output value
             })
@@ -140,7 +101,7 @@ const findEmail = async () => {
 </script>
 
 <template>
-    <form method="get" action="" :onsubmit="onSubmit()">
+    <form method="get" action="" :submit="authenticate">
         <h1>Sign yourself in?</h1>
 
         <label for="email">e-Mail</label>

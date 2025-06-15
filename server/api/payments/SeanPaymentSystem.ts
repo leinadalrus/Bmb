@@ -5,7 +5,7 @@ type PaymentRequestType = {
     method: 'creditCard' | 'debitCard' | 'bankTransfer' | 'thirdParty'
 }
 
-type PaymentRequestMutationType = PaymentRequestType & {
+export type PaymentRequestMutationType = PaymentRequestType & {
     card?: {
         number: number
         cvv: number
@@ -21,7 +21,7 @@ type PaymentResponseType = {
     storeTransactionId?: string
 }
 
-type GatewayResultType = PaymentResponseType
+export type GatewayResultType = PaymentResponseType
 
 export const handlePaymentTransactionEvent = defineEventHandler(
     async (event) => {

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+
 import type { AlbumArtMutationType } from '../(components)/AlbumArt.vue'
 import AlbumArt from '../(components)/AlbumArt.vue'
 import TradingCard, {
@@ -11,9 +13,9 @@ interface IActivityView {
     logline: string
 }
 
-const activity = shallowRef<IActivityView[]>([])
-const albums = shallowRef<AlbumArtMutationType[]>([])
-const cards = shallowRef<TradingCardMutationType[]>([])
+const activity = ref<IActivityView[]>([])
+const albums = ref<AlbumArtMutationType[]>([])
+const cards = ref<TradingCardMutationType[]>([])
 </script>
 
 <template>
