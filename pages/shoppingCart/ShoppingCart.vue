@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import type { ProductCardMutationType } from '../(components)/ProductCard.vue'
-import PaymentModal from '../payments/PaymentModal.vue'
+import { ref, computed } from 'vue'
+import { type ProductCardMutationType } from '../(components)/ProductCard.vue'
 
 defineProps<{
     shoppingCartList: ProductCardMutationType[]
 }>()
 
 defineEmits<{
-    (e: 'removeFromShoppingCart', product: ProductCardMutationType): void
-}>()
+    (e: 'undoChangeToShoppingCart', product: ProductCardMutationType): void
+    (e: 'removeProductFromShoppingCart', product: ProductCardMutationType): void
+}>() // Implicitly calls function
 
 type ShoppingCartType = {
     id: number
@@ -27,14 +28,6 @@ const total = computed(() => {
         0
     )
 })
-
-function removeFromShoppingCart(id: number) {
-    cart.value = cart.value.filter((i) => i.id != id)
-}
-
-function handlePaymentSuccess() {
-    // TODO: Stripe/PayPal API checkout-payment throughput processing here
-}
 </script>
 
 <template>
@@ -49,25 +42,24 @@ function handlePaymentSuccess() {
         </thead>
 
         <tbody>
-            <tr v-for="item in shoppingCartList" v-bind:key="item.id">
-                <td>{{ item.name }}</td>
+            <tr v-for="product in shoppingCartList" v-bind:key="product.id">
+                <td>{{ product.name }}</td>
                 <td>
                     <input
                         type="number"
                         name=""
                         id=""
-                        v-model.number="item.quantity"
+                        v-model.number="product.quantity"
                         min="1"
                         max="1"
                     />
                 </td>
-                <td>{{ item.price.toFixed(2) }}</td>
+                <td>{{ product.price.toFixed(2) }}</td>
                 <td>
                     <button
                         @click="
                             () => {
-                                removeFromShoppingCart(item.id)
-                                $emit('removeFromShoppingCart', item)
+                                $emit('removeProductFromShoppingCart', product)
                             }
                         "
                     >
@@ -80,11 +72,4 @@ function handlePaymentSuccess() {
 
     <span>{{ total }}</span>
     <button v-on:click="isPaymentModalActive = true">to Checkout?</button>
-
-    <PaymentModal
-        v-if="isPaymentModalActive == true"
-        :quantity="total"
-        :close="(isPaymentModalActive = false)"
-        :succession="handlePaymentSuccess()"
-    />
 </template>

@@ -1,3 +1,17 @@
+# Bmb
+
+## Bearing Mobius
+
+# How to compile C17 programs with EMCC
+
+```Sh
+emcc websdl2Canvas.c -std=c17 -Os -s WASM=1 \
+ -s USE_SDL=2 -s USE_WEBGL2=1 \
+ -s FULL_ES2=1 \
+ -s EXPORTED_RUNTIME_METHODS='["ccall","cwrap"]' \
+ -o websdl2Canvas.js
+```
+
 # Nuxt Minimal Starter
 
 Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.

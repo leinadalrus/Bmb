@@ -1,3 +1,5 @@
+/// <reference types="vite/client" />
+
 declare global {
     namespace NodeJS {
         interface ProcessEnv {
@@ -8,6 +10,7 @@ declare global {
             SALT_ROUNDS: number
             SECRET_KEY: string
             SECRET_HASH: string
+            SRV_PORT: number
         }
     }
 }

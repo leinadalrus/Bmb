@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { UserModelAssembler } from '~/src/models/UserSchema'
-
-import bcrypt from 'bcryptjs'
+import { UserModelAssembler } from '~/server/models/UserSchema'
 
 interface IRegisterForm {
     email: string
@@ -20,7 +18,7 @@ const erroneous = ref('')
 const statusCode = ref(0)
 const isLoading = ref(false)
 
-const email = async (request: Request, response: Response) => {
+const email = async (request: Request) => {
     const body = request.body
 
     const user = await UserModelAssembler.findOne({
@@ -32,7 +30,7 @@ const email = async (request: Request, response: Response) => {
     return { statusCode: 200, JSON: body }
 }
 
-const onSubmit = async (request: Request, response: Response) => {
+const onSubmit = async (request: Request) => {
     const headers = new Headers()
 
     // NOTE(Authorisation): request.header('Authorization').replace('Bearer', '')
@@ -58,14 +56,10 @@ const onSubmit = async (request: Request, response: Response) => {
         })
         if (user) return { statusCode: 400, JSON: erroneous }
 
-        const hashed = await bcrypt.hash(
-            form.value.password,
-            process.env.SALT_ROUNDS
-        )
+        if (findEmail == user) return { statusCode: 400, JSON: erroneous }
 
         const register = UserModelAssembler.create({
-            email,
-            hashed
+            email
         })
         await (await register).save()
 
@@ -82,7 +76,7 @@ const onSubmit = async (request: Request, response: Response) => {
     }
 }
 
-function findEmail(email: string): string {
+const findEmail = (email: string): string => {
     const find = UserModelAssembler.findOne({ email }, 'email')
         .select('email')
         .lean()

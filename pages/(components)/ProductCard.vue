@@ -1,12 +1,14 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+
 defineProps<{
     products: ProductCardMutationType[]
 }>()
 
-defineEmits<{
-    (e: 'addToShoppingCart', product: ProductCardMutationType): void
-    (e: 'removeFromShoppingCart', product: ProductCardMutationType): void
-}>()
+const emit = defineEmits([
+    'addProductToShoppingCart',
+    'removeProductFromShoppingCart'
+]) // Arbitrarily calls function
 
 export type ProductCardType = {
     name: string
@@ -27,19 +29,32 @@ export type ProductCardMutationType = ProductCardType & {
     webviewPath: string
 }
 
-const shoppingCartList = ref<ProductCardMutationType[]>()
+const shoppingCartList = ref<ProductCardMutationType[]>([])
 const inShoppingCartAlready = ref(false)
 
-function addProductToCart(product: ProductCardMutationType) {
+function addProductToShoppingCart(product: ProductCardMutationType) {
+    const productAlreadyIn = shoppingCartList.value?.find(
+        (item: { id: number }) => item.id == product.id
+    )
+    if (productAlreadyIn) {
+        return shoppingCartList.value
+            ?.filter((item: { id: number }) =>
+                item.id == product.id ? { ...item } : item
+            )
+            .pop()
+    }
+
     shoppingCartList.value?.push(product)
+    emit('addProductToShoppingCart')
+
+    return { ...shoppingCartList }
 }
 
-function removeProductFromCart(product: ProductCardMutationType) {
+function removeProductFromShoppingCart(product: ProductCardMutationType) {
     shoppingCartList.value
-        ?.map((p) => {
-            if (p.id == product.id) return p
-        })
+        .filter((i: { id: number }) => i.id != product.id)
         .pop()
+    emit('removeProductFromShoppingCart')
 }
 </script>
 
@@ -72,6 +87,7 @@ function removeProductFromCart(product: ProductCardMutationType) {
             <span
                 class="inline-block bg-[#446a4b] rounded-full px-2 py-1 text-sm text-[#f1eae4] mr-2 mb-2"
                 v-for="tag in product.tags"
+                :key="tag"
             >
                 <i>{{ tag }}</i>
             </span>
@@ -86,13 +102,13 @@ function removeProductFromCart(product: ProductCardMutationType) {
         <div v-if="inShoppingCartAlready == true">
             <button
                 class="px-6 py-4"
-                @click="$emit('removeFromShoppingCart', product)"
+                @click="removeProductFromShoppingCart(product)"
             >
                 Remove from cart? &ominus;
             </button>
         </div>
 
-        <button class="px-6 py-4" @click="$emit('addToShoppingCart', product)">
+        <button class="px-6 py-4" @click="addProductToShoppingCart(product)">
             Add to cart? &oplus;
         </button>
     </article>
