@@ -1,4 +1,5 @@
 # Nuxt dev/build outputs
+
 .output
 .data
 .nuxt
@@ -7,6 +8,7 @@
 dist
 
 # Node dependencies
+
 node_modules
 
 # Logs
@@ -19,6 +21,12 @@ logs
 .idea
 
 # Local env files
+
 .env
 .env.*
 !.env.example
+
+# Embedding files
+
+*.wasm
+server/api/webgl/*.js
